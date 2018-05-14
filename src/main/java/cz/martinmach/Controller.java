@@ -94,7 +94,7 @@ public class Controller {
         vbox.setPadding(new Insets(10));
         vbox.setSpacing(8);
 
-        Text title = new Text("Training data");
+        Text title = new Text("训练数据");
         this.trainingDataList = new ListView<String>();
         this.trainingDataList.setPrefHeight(910);
         vbox.getChildren().addAll(title, this.trainingDataList);
@@ -103,7 +103,7 @@ public class Controller {
         vbox2.setPadding(new Insets(10));
         vbox2.setSpacing(8);
 
-        Text title2 = new Text("Testing data");
+        Text title2 = new Text("测试数据");
         this.testingDataList = new ListView<String>();
         this.testingDataList.setPrefHeight(910);
         vbox2.getChildren().addAll(title2, this.testingDataList);
@@ -119,10 +119,12 @@ public class Controller {
         hbox.setPadding(new Insets(15, 12, 15, 12));
         hbox.setSpacing(10);
 
-        Button buttonCurrent = new Button("Load training data");
+        Button buttonCurrent = new Button("载入训练数据");
         buttonCurrent.setPrefSize(150, 20);
         buttonCurrent.setOnAction((e) -> {
             FileChooser fileChooser = new FileChooser();
+            File initDirectory=new File(".\\src\\main\\Data");
+            fileChooser.setInitialDirectory(initDirectory);
             File file = fileChooser.showOpenDialog(null);
 
             if (file != null) {
@@ -135,7 +137,7 @@ public class Controller {
             }
         });
 
-        this.trainButton = new Button("Train");
+        this.trainButton = new Button("训练");
         this.trainButton.setOnAction((e) -> {
             try {
                 this.clearPlot();
@@ -157,10 +159,12 @@ public class Controller {
         text.setTranslateY(5);
         text.setTranslateX(10);
 
-        this.buttonTesting = new Button("Load testing data");
+        this.buttonTesting = new Button("载入测试数据");
         buttonTesting.setPrefSize(150, 20);
         buttonTesting.setOnAction((e) -> {
             FileChooser fileChooser = new FileChooser();
+            File initDirectory=new File(".\\src\\main\\Data");
+            fileChooser.setInitialDirectory(initDirectory);
             File file = fileChooser.showOpenDialog(null);
 
             if (file != null) {

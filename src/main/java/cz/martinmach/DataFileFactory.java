@@ -15,7 +15,9 @@ public class DataFileFactory {
         put("json", new JsonDataFileInterpreter());
         put("csv", new CsvDataFileInterpreter());
     }};
-
+    /*
+    * 载入测试数据
+    * */
     public TestingData loadTestingData(File file) throws UnknownDataFileException, IOException {
         return this.getInterpreter(file).loadTestingData(this.loadFileContent(file));
     }
@@ -40,9 +42,12 @@ public class DataFileFactory {
     private void throwUnknownDataFileException() throws UnknownDataFileException {
         throw new UnknownDataFileException("Unknown data file type. Known types: " + String.join(", ", INTERPRETERS.keySet()));
     }
-
+    /*
+     * 输入:文件名
+     * 返回:List<String>,每个元素是文件中的一行数据
+     */
     private String loadFileContent(File file) throws IOException {
-        final String EoL = System.getProperty("line.separator");
+        final String EoL = System.getProperty("line.separator");//换行符
         List<String> lines = Files.readAllLines(Paths.get(file.getAbsolutePath()), Charset.defaultCharset());
 
         StringBuilder sb = new StringBuilder();
