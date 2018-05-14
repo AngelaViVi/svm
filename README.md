@@ -1,21 +1,23 @@
-# SVM implementation
+数据挖掘作业
+=======================
 
-Java implementation of the Support Vector Machine algorithm. Based on [this Python SVM tutorial](https://pythonprogramming.net/linear-svc-example-scikit-learn-svm-python/).
+Java implementation of the Support Vector Machine algorithm. <br>
+Based on [this Python SVM tutorial](https://pythonprogramming.net/linear-svc-example-scikit-learn-svm-python/).<br>
+The original code comes from :[Reference](https://github.com/mxmxcz/svm).<br>
 
 ## Features
 
-- CSV and JSON data input
-- Data plot
-- Support for 2D data separable with a linear kernel
-- JavaFX UI
+* CSV and JSON data input
+* Data plot
+* Support for 2D data separable with a linear kernel
+* JavaFX UI
 
-## ToDo
+## build
+* IntelliJ IDEA 2018.1.3
+* jdk1.8.0_131
+* You Can Find the `.csv` Data Files in [here](https://github.com/AngelaViVi/svm/tree/master/src/main/Data).
 
-- [ ] Split the Controller class into more files/classes (yea, I'm aware of that)
-- [ ] Support for 3+D data
-- [ ] Output export
-- [ ] Some minor bugs
 
 ## Screenshots
 
-![App UI](http://sandbox.martinmach.cz/svm/ui.png)
+![App UI](https://github.com/AngelaViVi/svm/blob/master/svm-screenshot.png)
