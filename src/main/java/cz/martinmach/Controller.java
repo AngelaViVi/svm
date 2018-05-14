@@ -155,7 +155,7 @@ public class Controller {
                 this.stateTrainingLoaded();
             }
         });
-        Text text = new Text("Precision: ");
+        Text text = new Text("精度: ");
         text.setTranslateY(5);
         text.setTranslateX(10);
 
