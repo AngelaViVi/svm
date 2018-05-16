@@ -360,24 +360,20 @@ public class Controller {
      */
     private void plotSvm() {
         PointPair mainVector = this.svm.getMainVector();
-        PointPair positiveVector = this.svm.getPositiveVector();
-        PointPair negativeVector = this.svm.getNegativeVector();
-
         XYChart.Series series5 = new XYChart.Series();
         series5.setName("Vector");
-
-        XYChart.Series series6 = new XYChart.Series();
-        series6.setName("Vector+1");
-
-        XYChart.Series series7 = new XYChart.Series();
-        series7.setName("Vector-1");
-
         series5.getData().add(new XYChart.Data<>(mainVector.getFromX(), mainVector.getFromY()));
         series5.getData().add(new XYChart.Data<>(mainVector.getToX(), mainVector.getToY()));
 
+        PointPair positiveVector = this.svm.getPositiveVector();
+        XYChart.Series series6 = new XYChart.Series();
+        series6.setName("Vector+1");
         series6.getData().add(new XYChart.Data<>(positiveVector.getFromX(), positiveVector.getFromY()));
         series6.getData().add(new XYChart.Data<>(positiveVector.getToX(), positiveVector.getToY()));
 
+        PointPair negativeVector = this.svm.getNegativeVector();
+        XYChart.Series series7 = new XYChart.Series();
+        series7.setName("Vector-1");
         series7.getData().add(new XYChart.Data<>(negativeVector.getFromX(), negativeVector.getFromY()));
         series7.getData().add(new XYChart.Data<>(negativeVector.getToX(), negativeVector.getToY()));
 

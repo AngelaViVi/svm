@@ -1,7 +1,7 @@
 package AnnaSkywalker.svm;
 
 /**
- * Created by mmx on 17.2.17.
+ * 点对,用来表达直线
  */
 public class PointPair {
     private Double fromX;
