@@ -1,16 +1,14 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mmx on 17.2.17.
- */
-public class CsvDataFileInterpreter implements DataFileInterpreter {
+
+public class DataFileInterpreter {
 
     private static final String DELIMITER = ";";
 
-    @Override
+
     public TestingData loadTestingData(String content) throws UnknownDataFileException {
         List<List<Double>> test = new ArrayList<>();
         String[] lines = this.getLines(content);
@@ -27,7 +25,7 @@ public class CsvDataFileInterpreter implements DataFileInterpreter {
         return new TestingData(test);
     }
 
-    @Override
+
     public TrainingData loadTrainingData(String content) throws UnknownDataFileException {
         List<List<Double>> pos = new ArrayList<>();
         List<List<Double>> neg = new ArrayList<>();

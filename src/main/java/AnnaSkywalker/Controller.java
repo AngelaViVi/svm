@@ -1,9 +1,9 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
-import cz.martinmach.svm.Classification;
-import cz.martinmach.svm.PointPair;
-import cz.martinmach.svm.SolutionNotFoundException;
-import cz.martinmach.svm.SupportVectorMachine;
+import AnnaSkywalker.svm.Classification;
+import AnnaSkywalker.svm.PointPair;
+import AnnaSkywalker.svm.SolutionNotFoundException;
+import AnnaSkywalker.svm.SupportVectorMachine;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,35 +32,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
-
-    private final DataFileFactory dataFileFactory;
-    private SupportVectorMachine svm;
+    //界面元素
     private LineChart<Number, Number> sc;
     private BorderPane pane;
-    private ListView<String> trainingDataList;
-    private TrainingData trainingData;
     private StackPane stackPane;
     private Button trainButton;
-    private TextField precisionText;
-    private ListView<String> testingDataList;
-    private TestingData testingData;
     private Button buttonTesting;
-
-    private static final String TITLE = "SVM";
+    private TextField precisionText;
+    //点集
     private XYChart.Series testPositiveSeries;
     private XYChart.Series testNegativeSeries;
+    //读取输入数据
+    private final DataFileFactory dataFileFactory;
+    //核心计算
+    private SupportVectorMachine svm;
+    //存储训练数据和测试数据
+    private ListView<String> testingDataList;
+    private TestingData testingData;
+    private ListView<String> trainingDataList;
+    private TrainingData trainingData;
 
+
+    /*
+    构造函数
+     */
+    public Controller() {
+        this.dataFileFactory = new DataFileFactory();
+        this.svm = new SupportVectorMachine();
+    }
+
+    /*
+    设置界面窗口的一些属性
+     */
     public void setStage(Stage stage) {
-        stage.setTitle(TITLE);
-
+        stage.setTitle("Sample SVM with java");//窗口标题
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
         this.sc = new LineChart<Number, Number>(xAxis, yAxis);
-        xAxis.setLabel("X features");
-        yAxis.setLabel("Y features");
-        sc.setTitle(TITLE);
+        xAxis.setLabel("X");
+        yAxis.setLabel("Y");
+        sc.setTitle("Sample SVM with java");//坐标图上放标题
 
-        this.pane = this.createPane();
+        this.pane = new BorderPane();;
         pane.setCenter(sc);
         pane.setTop(this.createTopPanel());
         pane.setLeft(this.createLeftPanel());
@@ -71,22 +84,41 @@ public class Controller {
         Scene main = new Scene(this.stackPane);
         main.getStylesheets().add("/css/graph.css");
         stage.setScene(main);
-        stage.setMaximized(true);
+        stage.setMaximized(false);//窗口最大化
+        stage.setHeight(600);//窗口尺寸
+        stage.setWidth(1100);
         stage.show();
 
         this.stateInit();
     }
+    /*
+    调整界面元素的可用状态:初始化
+     */
+    private void stateInit() {
+        this.trainButton.setDisable(true);
+        this.buttonTesting.setDisable(true);
 
-    public Controller() {
-        this.dataFileFactory = new DataFileFactory();
-        this.svm = new SupportVectorMachine();
+        this.clearPlot();
+        this.testingDataList.getItems().clear();
+        this.trainingDataList.getItems().clear();
     }
-
-    private BorderPane createPane() {
-        BorderPane pane = new BorderPane();
-        return pane;
+    /*
+    调整界面元素的可用状态:训练数据载入成功后
+    */
+    private void stateTrainingLoaded() {
+        this.trainButton.setDisable(false);
+        this.buttonTesting.setDisable(true);
     }
-
+    /*
+    调整界面元素的可用状态:训练结束后
+     */
+    private void stateTrained() {
+        this.trainButton.setDisable(true);
+        this.buttonTesting.setDisable(false);
+    }
+    /*
+    创建左侧的容器,向其中添加两个listview来显示测试数据和训练数据
+     */
     private HBox createLeftPanel() {
         HBox hbox = new HBox();
 
@@ -113,7 +145,9 @@ public class Controller {
 
         return hbox;
     }
-
+    /*
+    创建上部的容器,向其中添加按钮等部件
+    */
     private HBox createTopPanel() {
         HBox hbox = new HBox();
         hbox.setPadding(new Insets(15, 12, 15, 12));
@@ -123,7 +157,7 @@ public class Controller {
         buttonCurrent.setPrefSize(150, 20);
         buttonCurrent.setOnAction((e) -> {
             FileChooser fileChooser = new FileChooser();
-            File initDirectory=new File(".\\src\\main\\Data");
+            File initDirectory=new File(".\\src\\main\\Data");//提供文件选择对话框的初始位置
             fileChooser.setInitialDirectory(initDirectory);
             File file = fileChooser.showOpenDialog(null);
 
@@ -192,18 +226,33 @@ public class Controller {
         this.sc.getData().clear();
         this.sc.setAnimated(true);
     }
-
+    /*
+    载入测试数据
+     */
     private void loadTestingFile(File file) throws IOException, UnknownDataFileException {
-        this.testingData = this.dataFileFactory.loadTestingData(file);
-        this.processTestingData(testingData);
-    }
+        testingData = dataFileFactory.loadTestingData(file);
 
+        List<List<Double>> test = testingData.getTest();
+        ObservableList<String> items = FXCollections.observableArrayList();
+
+        if(!this.sc.getData().contains(this.testPositiveSeries)) {
+            sc.getData().addAll(this.testPositiveSeries, this.testNegativeSeries);
+        }
+
+        for (List<Double> pos : test) {
+            boolean positive = this.plotTestingData(pos);
+            String str = String.format("%s\t%f; %f", positive ? "+" : "-", pos.get(0), pos.get(1));
+            items.add(str);
+        }
+
+        this.testingDataList.setItems(items);
+    }
+    /*
+    载入训练数据
+     */
     private void loadTrainingFile(File file) throws IOException, UnknownDataFileException {
-        this.trainingData = this.dataFileFactory.loadTrainingData(file);
-        this.processTrainingData(trainingData);
-    }
+        trainingData = dataFileFactory.loadTrainingData(file);
 
-    private void processTrainingData(TrainingData trainingData) throws IOException {
         List<List<Double>> positive = trainingData.getPositive();
         List<List<Double>> negative = trainingData.getNegative();
 
@@ -223,7 +272,9 @@ public class Controller {
         this.plotTrainingData(trainingData);
         this.stateTrainingLoaded();
     }
-
+    /*
+    描点:训练数据
+    */
     private void plotTrainingData(TrainingData trainingData) throws IOException {
         this.sc.setAnimated(false);
         this.sc.setCreateSymbols(false);
@@ -251,25 +302,9 @@ public class Controller {
         sc.getData().addAll(series1, series2);
         sc.setAnimated(true);
     }
-
-
-    private void processTestingData(TestingData testingData) throws IOException {
-        List<List<Double>> test = testingData.getTest();
-        ObservableList<String> items = FXCollections.observableArrayList();
-
-        if(!this.sc.getData().contains(this.testPositiveSeries)) {
-            sc.getData().addAll(this.testPositiveSeries, this.testNegativeSeries);
-        }
-
-        for (List<Double> pos : test) {
-            boolean positive = this.plotTestingData(pos);
-            String str = String.format("%s\t%f; %f", positive ? "+" : "-", pos.get(0), pos.get(1));
-            items.add(str);
-        }
-
-        this.testingDataList.setItems(items);
-    }
-
+    /*
+    描点:测试数据
+     */
     private boolean plotTestingData(List<Double> data) throws IOException {
         RealVector t = this.singleDoubleToRealVector(data);
         Classification classification = svm.classify(t);
@@ -282,13 +317,13 @@ public class Controller {
             return false;
         }
     }
-
-
+    /*
+    训练
+     */
     private void train(TrainingData trainingData, int precision) {
         ProgressIndicator pi = new ProgressIndicator();
         VBox box = new VBox(pi);
         box.setAlignment(Pos.CENTER);
-        // Grey Background
         this.pane.setDisable(true);
         this.stackPane.getChildren().add(box);
 
@@ -308,11 +343,11 @@ public class Controller {
                     this.plotSvm();
                     this.stateTrained();
                 } else {
-                    this.showError("Solution not found");
+                    this.showError("无解!");
                     this.stateTrainingLoaded();
                 }
 
-                this.pane.setDisable(false);
+                pane.setDisable(false);
                 this.stackPane.getChildren().remove(box);
             });
 
@@ -320,7 +355,9 @@ public class Controller {
 
         one.start();
     }
-
+    /*
+    画出分界线
+     */
     private void plotSvm() {
         PointPair mainVector = this.svm.getMainVector();
         PointPair positiveVector = this.svm.getPositiveVector();
@@ -346,7 +383,9 @@ public class Controller {
 
         sc.getData().addAll(series5, series6, series7);
     }
-
+    /*
+    类型转换:List<List<Double>>转RealVector
+     */
     private List<RealVector> doubleToRealVector(List<List<Double>> list) {
         List<RealVector> ret = new ArrayList<>();
 
@@ -356,7 +395,9 @@ public class Controller {
 
         return ret;
     }
-
+    /*
+    类型转换:List<Double>转RealVector
+     */
     private RealVector singleDoubleToRealVector(List<Double> list) {
         double[] doubles = new double[list.size()];
 
@@ -367,26 +408,9 @@ public class Controller {
         return new ArrayRealVector(doubles);
 
     }
-
-    private void stateInit() {
-        this.trainButton.setDisable(true);
-        this.buttonTesting.setDisable(true);
-
-        this.clearPlot();
-        this.testingDataList.getItems().clear();
-        this.trainingDataList.getItems().clear();
-    }
-
-    private void stateTrainingLoaded() {
-        this.trainButton.setDisable(false);
-        this.buttonTesting.setDisable(true);
-    }
-
-    private void stateTrained() {
-        this.trainButton.setDisable(true);
-        this.buttonTesting.setDisable(false);
-    }
-
+    /*
+    显示错误信息
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR, message);
         alert.showAndWait();

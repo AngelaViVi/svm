@@ -1,7 +1,7 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
 /**
- * Created by mmx on 17.2.17.
+ * 未知文件类型异常
  */
 public class UnknownDataFileException extends Exception {
     public UnknownDataFileException() {

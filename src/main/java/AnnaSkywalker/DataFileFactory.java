@@ -1,4 +1,4 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,13 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-/**
- * Created by mmx on 17.2.17.
- */
+
 public class DataFileFactory {
-    private final static HashMap<String, DataFileInterpreter> INTERPRETERS = new LinkedHashMap<String, DataFileInterpreter>() {{
-        put("json", new JsonDataFileInterpreter());
-        put("csv", new CsvDataFileInterpreter());
+    private final static HashMap<String, DataFileInterpreter> INTERPRETERS =
+            new LinkedHashMap<String, DataFileInterpreter>() {{
+        put("csv", new DataFileInterpreter());
     }};
     /*
     * 载入测试数据
@@ -21,7 +19,9 @@ public class DataFileFactory {
     public TestingData loadTestingData(File file) throws UnknownDataFileException, IOException {
         return this.getInterpreter(file).loadTestingData(this.loadFileContent(file));
     }
-
+    /*
+    载入训练数据
+     */
     public TrainingData loadTrainingData(File file) throws UnknownDataFileException, IOException {
         return this.getInterpreter(file).loadTrainingData(this.loadFileContent(file));
     }

@@ -57,7 +57,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>cz.martinmach.Main</mainClass>
+                            <mainClass>AnnaSkywalker.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -1,13 +1,13 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
 import java.util.List;
 
 /**
- * Created by mmx on 25.1.17.
+ * 训练数据
  */
 public class TrainingData {
-    private List<List<Double>> positive;
-    private List<List<Double>> negative;
+    private List<List<Double>> positive;//正样本
+    private List<List<Double>> negative;//负样本
 
     public TrainingData(List<List<Double>> positive, List<List<Double>> negative){
         this.positive = positive;

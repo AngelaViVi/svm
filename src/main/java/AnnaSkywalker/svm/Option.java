@@ -1,4 +1,4 @@
-package cz.martinmach.svm;
+package AnnaSkywalker.svm;
 
 import org.apache.commons.math3.linear.RealVector;
 

@@ -1,18 +1,18 @@
-package cz.martinmach;
+package AnnaSkywalker;
 
 import java.util.List;
 
 /**
- * Created by mmx on 25.1.17.
+ * 测试数据
  */
 public class TestingData {
     private List<List<Double>> test;
-
+    public List<List<Double>> getTest() {
+        return test;
+    }
     public TestingData(List<List<Double>> test) {
         this.test = test;
     }
 
-    public List<List<Double>> getTest() {
-        return test;
-    }
+
 }

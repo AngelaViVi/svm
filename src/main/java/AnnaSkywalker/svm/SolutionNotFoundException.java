@@ -1,4 +1,4 @@
-package cz.martinmach.svm;
+package AnnaSkywalker.svm;
 
 /**
  * Created by mmx on 25.1.17.
